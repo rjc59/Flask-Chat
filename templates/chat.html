@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - {{ super() }}{% endblock %}
+
+{% block body %}
+<script type="text/javascript" src="{{ url_for('static', filename='ajaj.js') }}"></script>
+<h2>{{ room.name }}</h2>
+</br>
+<table id="Messages">
+			{% for m in messages %}
+				<tr>
+					<td>{{users.filter_by(id=m.sender_id).first().username}}: {{ m.text }}</td>
+				</tr>
+			{% else %}
+				<tr><td>No messages!</td></tr>
+			{% endfor %}
+</table>
+</br>
+<form name="Form">
+  <input type="text" id="message" name="message" value="" />
+  <input type="button" id="submitButton" value="enter" />
+</form>
+</br>
+<a href="/leave/{{ room.id }}">Click here to leave this chatroom</a>
+{% endblock %}

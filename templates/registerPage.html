@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Add new account - {{ super() }}{% endblock %}
+
+{% block body %}
+  <form action="" method="post">
+    Desired Username: <input type="text" name="user" />
+    <br />
+    Desired Password: <input type="text" name="pass" />
+    <br />
+    <input type="submit" value="submit" />
+  </form>
+{% endblock %}

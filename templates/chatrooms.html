@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Chatrooms - {{ super() }}{% endblock %}
+
+{% block body %}
+Chatrooms:
+<ul class="chatrooms">
+  {% for chatroom in chatrooms %}
+    <li><h2>{{ chatroom.name }}</h2>
+    <li><a href="/join/{{ chatroom.id }}">Click here to join this chatroom</a>
+  {% else %}
+    <li><em>No chatrooms exist yet</em>
+  {% endfor %}
+</ul>
+</br>
+</br>
+<a href="{{ url_for("create_room") }}">Click here to create a chatroom</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Add new chatroom- {{ super() }}{% endblock %}
+
+{% block body %}
+  <form action="" method="post">
+    Name of new chatroom: <input type="text" name="name" />
+    <br />
+    <input type="submit" value="submit" />
+  </form>
+{% endblock %}
