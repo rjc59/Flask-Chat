@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, abort, url_for, redirect, session, g, render_template, flash
 from models import db, User, Chatroom, Message
+import json
 
 app =  Flask(__name__)
 
@@ -106,6 +107,12 @@ def make_post():
     message_queue.append({"text" : request.form['text'], "sender" : user.username, "chatroom" : room.name})
     return "OK"
 
+@app.route('/getPosts')
+def get_posts():
+    queued_messages = json.dumps(message_queue)
+    del message_queue[:]
+    return queued_messages
+
 @app.route('/createRoom', methods=["GET", "POST"])
 def create_room():
     # Make sure user logged in
@@ -147,6 +154,19 @@ def leave(roomid=None):
         room_to_leave = Chatroom.query.filter_by(id=roomid).first()
         user = get_user(session["username"])
         room_to_leave.users.remove(user)
+        db.session.commit()
+        return redirect(url_for("chatrooms", username=session["username"]))
+
+@app.route('/delete/<roomid>')
+def delete(roomid=None):
+    if not roomid:
+        if "username" in session:
+            return redirect(url_for("chatrooms", username=session["username"]))
+        else:
+            return redirect(url_for("logger"))
+    else:
+        room_to_delete = Chatroom.query.filter_by(id=roomid).first()
+        db.session.delete(room_to_delete)
         db.session.commit()
         return redirect(url_for("chatrooms", username=session["username"]))
 

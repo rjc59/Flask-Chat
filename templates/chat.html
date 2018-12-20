@@ -3,7 +3,81 @@
 {% block title %}Chat - {{ super() }}{% endblock %}
 
 {% block body %}
-<script type="text/javascript" src="{{ url_for('static', filename='ajaj.js') }}"></script>
+<script type="text/javascript">
+var timeoutID;
+var timeout = 1000;
+
+function setup() {
+	document.getElementById("submitButton").addEventListener("click", makePost, true);
+
+  timeoutID = window.setTimeout(poller, timeout);
+}
+
+function makePost() {
+	var httpRequest = new XMLHttpRequest();
+
+	if (!httpRequest) {
+		alert('Giving up :( Cannot create an XMLHTTP instance');
+		return false;
+	}
+
+	var text = document.getElementById("message").value;
+
+	httpRequest.open("POST", "/makePost");
+	httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+	var data;
+  var username = "{{ username|safe }}";
+
+	data = "text=" + text + "&sender=" + username;
+
+	httpRequest.send(data);
+}
+
+function poller() {
+	var httpRequest = new XMLHttpRequest();
+
+	if (!httpRequest) {
+		alert('Giving up :( Cannot create an XMLHTTP instance');
+		return false;
+	}
+
+	httpRequest.onreadystatechange = function() { handlePoll(httpRequest) };
+	httpRequest.open("GET", "/getPosts");
+	httpRequest.send();
+}
+
+function handlePoll(httpRequest) {
+	if (httpRequest.readyState === XMLHttpRequest.DONE) {
+		if (httpRequest.status === 200) {
+			var rows = JSON.parse(httpRequest.responseText);
+			for (var i = 0; i < rows.length; i++) {
+				addMessage(rows[i]);
+			}
+
+			timeoutID = window.setTimeout(poller, timeout);
+
+		} else {
+			alert("There was a problem with the poll request.  you'll need to refresh the page to recieve updates again!");
+		}
+	}
+}
+
+function addMessage(row) {
+  var table = document.getElementById("Messages");
+  var newRow   = table.insertRow();
+
+	var newCell, newText;
+  var contents = row['sender'] + ": " + row['text'];
+
+	newCell  = newRow.insertCell();
+	newText  = document.createTextNode(contents);
+	newCell.appendChild(newText);
+}
+
+window.addEventListener("load", setup, true);
+
+</script>
 <h2>{{ room.name }}</h2>
 </br>
 <table id="Messages">
@@ -11,8 +85,6 @@
 				<tr>
 					<td>{{users.filter_by(id=m.sender_id).first().username}}: {{ m.text }}</td>
 				</tr>
-			{% else %}
-				<tr><td>No messages!</td></tr>
 			{% endfor %}
 </table>
 </br>

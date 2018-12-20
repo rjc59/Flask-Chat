@@ -8,6 +8,9 @@ Chatrooms:
   {% for chatroom in chatrooms %}
     <li><h2>{{ chatroom.name }}</h2>
     <li><a href="/join/{{ chatroom.id }}">Click here to join this chatroom</a>
+    {% if chatroom.creator.first().id == user.id %}
+      <li><a href="/delete/{{ chatroom.id }}">Click here to delete this chatroom</a>
+    {% endif %}
   {% else %}
     <li><em>No chatrooms exist yet</em>
   {% endfor %}
