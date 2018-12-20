@@ -3,9 +3,23 @@
 ## Description:
 A web app to host and manage chat rooms.
 
+## Requirements:
+Python 3 and pip
+
+## Setup:
+1.  In a given directory, setup a python virtual environment with: "python -m venv venv"
+	* Or "py -3 -m venv venv" or "python 3 -m venv venv" depending on your OS and if you have multiple python versions installed. The key is that python 3 is used.
+1.  In this directory, cd to the venv\Scripts\ directory (on Windows) or the venv/bin directory (on Linux)
+1.  Run "source activate" (on Windows) or ". activate" (on Linux)
+	* The shell prompt should change to show the name of the activated environment
+1.  Install Flask with: "pip install Flask"
+1.  Install SQLAlchemy with: "pip install Flask-SQLAlchemy"
+1.  This gives you a virutal environment to use for flask apps requiring SQLAlchemy. You can deactivate the environment by running "source deactivate" (on Windows) or "deactivate" (on Linux)
+
 ## Running:
-*  Initialize the database by setting the FLASK_APP environment variable to chat.py and running "flask initdb"
-*  Set the FLASK_APP environment variable to chat.py and run with "flask run"
+1.  Initialize the database by setting the FLASK_APP environment variable to chat.py (e.g. "export FLASK_APP=chat.py") and running "flask initdb"
+1.  Run with "flask run"
+1.  Navigate to 127.0.0.1:5000 (the default ip for running flask apps) in your browser
 
 ## Specifications:
 1.  When visiting the page for the first time, users should be given the chance to create an account or login
